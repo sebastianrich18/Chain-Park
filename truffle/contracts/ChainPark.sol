@@ -59,6 +59,10 @@ contract ChainPark {
     dailyIncome = _dailyIncome;
   }
 
+  function setAdmin(address newAdmin) public onlyAdmin {
+    admin = newAdmin;
+  }
+
   function getFee(uint lotIndex) public view returns (uint) {
     if (lotCurrentCapacities[lotIndex] == 0) {
       return 0;
@@ -98,7 +102,7 @@ contract ChainPark {
     emit Left(msg.sender, lotIndex);
   }
 
-  function claim() public {
+  function claim() public { // this will interact with the ERC20 token contract eventualy
     uint daysSinceClaim = (block.timestamp - lastClaimed[msg.sender]) / 1 days;
     require(daysSinceClaim > parksSinceClaim[msg.sender], "You have not parked for a day.");
     uint amount = (daysSinceClaim - parksSinceClaim[msg.sender]) * dailyIncome; // you will not get paid for the days you parked
