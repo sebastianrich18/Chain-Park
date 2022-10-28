@@ -27,7 +27,9 @@
   24: Slee A, B
   25: Fronzack
 */
-var MyContract = artifacts.require("ChainPark");
+var ChainPark = artifacts.require("ChainPark");
+var UBPC = artifacts.require("UBParkingCredits");
+
 
 module.exports = function(deployer) {
   let lotMaxCap = [100, 324, 211, 432, 54, 23, 543, 234, 62, 23, 123, 431, 213, 321, 321, 123, 123, 321, 1234, 124, 1233, 213, 123, 321, 234, 321]; // we can get a accurate number from the parking office or counting
@@ -36,5 +38,8 @@ module.exports = function(deployer) {
   let lotTypes = [1, 2, 2, 0, 2, 2, 2, 0, 0, 2, 1, 0, 2, 0, 2, 2, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2]
   let maxFee = 10
   let dailyIncome = 5
-  deployer.deploy(MyContract, lotMaxCap, lotTypes, maxFee, dailyIncome);
+  deployer.deploy(ChainPark, lotMaxCap, lotTypes, maxFee, dailyIncome);
+
+  let initalSupply = 100;
+  deployer.deploy(UBPC, initalSupply);
 };

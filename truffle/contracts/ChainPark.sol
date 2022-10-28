@@ -5,13 +5,13 @@ contract ChainPark {
   address admin;
   uint256 public maxFee; // the cost to park if you are the last person to park
   uint dailyIncome; // the amount you will earn if you do not park for a day
-  uint public constant NOT_PARKED = 2**256 - 1; // use max uint to represent not parked
+  uint constant NOT_PARKED = 2**256 - 1; // use max uint to represent not parked
   mapping(address=>bool) staff;
   mapping(address=>uint) lastClaimed; // timestamp
   mapping(address=>uint) parksSinceClaim;
   mapping(address=>uint) currentlyParked; // NOT_PARKED if not parked, otherwise lotIndex
-  uint[] lotMaxCapacities;
-  uint[] lotCurrentCapacities;
+  uint[] public lotMaxCapacities;
+  uint[] public lotCurrentCapacities;
   enum lotType {Staff, Student, Both}
   lotType[] lotTypes;
 
