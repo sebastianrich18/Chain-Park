@@ -49,9 +49,7 @@ const Home = () => {
 
 
   const renderCapacities = () => {
-    if (loading) {
-      return <p>Loading...</p>
-    }
+
     let items = maxCapacities.map((capacity, index) => {
       return (
         <tr>
@@ -61,7 +59,7 @@ const Home = () => {
         </tr>
       )
     })
-    console.log(items)
+    // console.log(items)
     return (
       <Table striped bordered hover size="sm">
         <thead>

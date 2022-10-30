@@ -31,11 +31,13 @@ export default function useGetCapacities() {
                 for (let i = 0; i < lotCount; i++) {
                     const cur = await contract.lotCurrentCapacities(i)
                     const max = await contract.lotMaxCapacities(i)
-                    currentCapacities.push(cur.toNumber())
-                    maxCapacities.push(max.toNumber())
+                    // currentCapacities.push(cur.toNumber())
+                    // maxCapacities.push(max.toNumber())
+                    setCurrentCapacities(old => [...old, cur.toNumber()])
+                    setMaxCapacities(old => [...old, max.toNumber()])
                 }
-                setCurrentCapacities(currentCapacities)
-                setMaxCapacities(maxCapacities)
+                // setCurrentCapacities(currentCapacities)
+                // setMaxCapacities(maxCapacities)
                 setLoading(false)
                 console.log("Capacities Loaded")
             }
