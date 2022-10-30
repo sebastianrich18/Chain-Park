@@ -5,12 +5,12 @@ contract ChainPark {
   address admin;
   uint256 public maxFee; // the cost to park if you are the last person to park
   uint dailyIncome; // the amount you will earn if you do not park for a day
-  uint constant NOT_PARKED = 2**256 - 1; // use max uint to represent not parked
+  //uint constant NOT_PARKED = 2**256 - 1; // use max uint to represent not parked
   mapping(address=>bool) staff;
   mapping(address=>uint) lastClaimed; // timestamp
   mapping(address=>uint) parksSinceClaim;
   mapping(address=>uint) currentlyParked; // NOT_PARKED if not parked, otherwise lotIndex
-  uint[] public lotMaxCapacities;
+  uint[] public lotMaxCapacities; // index 0 is not used. Lots are 1-indexed so that 0 can be used to represent not parked
   uint[] public lotCurrentCapacities;
   enum lotType {Staff, Student, Both}
   lotType[] lotTypes;
@@ -72,7 +72,7 @@ contract ChainPark {
 
   function park(uint lotIndex) public payable notFull(lotIndex) {
     require(msg.value >= getFee(lotIndex), "Insufficient funds.");
-    require(currentlyParked[msg.sender] == NOT_PARKED, "You are already parked.");
+    require(currentlyParked[msg.sender] == 0, "You are already parked.");
     if (lotTypes[lotIndex] == lotType.Staff) {
       parkStaff(lotIndex);
     } else {
@@ -95,10 +95,10 @@ contract ChainPark {
   }
 
   function leave() public {
-    require(currentlyParked[msg.sender] != NOT_PARKED, "You are not parked.");
+    require(currentlyParked[msg.sender] != 0, "You are not parked.");
     uint lotIndex = uint(currentlyParked[msg.sender]);
     lotCurrentCapacities[lotIndex]--;
-    currentlyParked[msg.sender] = NOT_PARKED;
+    currentlyParked[msg.sender] = 0;
     emit Left(msg.sender, lotIndex);
   }
 
