@@ -33,7 +33,7 @@ var ChainPark = artifacts.require("ChainPark");
 
 
 module.exports = function(deployer) {
-  let lotMaxCap = [2**256-1, 100, 324, 211, 432, 54, 23, 543, 234, 62, 23, 123, 431, 213, 321, 321, 123, 123, 321, 1234, 124, 1233, 213, 123, 321, 234, 321]; // we can get a accurate number from the parking office or counting
+  let lotMaxCap = [9999, 100, 324, 211, 432, 54, 23, 543, 234, 62, 23, 123, 431, 213, 321, 321, 123, 123, 321, 1234, 124, 1233, 213, 123, 321, 234, 321]; // we can get a accurate number from the parking office or counting
   // for lot types, 0=Staff, 1=Student, 2=Both
 
   let lotTypes = [2, 1, 2, 2, 0, 2, 2, 2, 0, 0, 2, 1, 0, 2, 0, 2, 2, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2]

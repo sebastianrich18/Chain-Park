@@ -4,9 +4,12 @@ import { useProvider } from "@web3modal/react"
 import ChainPark from '../../truffle/build/contracts/ChainPark.json'
 
 export default function useGetCapacities() {
+
+    const NUM_LOTS = 26
+
     const [loading, setLoading] = useState(true)
-    const [currentCapacities, setCurrentCapacities] = useState([])
-    const [maxCapacities, setMaxCapacities] = useState([])
+    const [currentCapacities, setCurrentCapacities] = useState([9999])
+    const [maxCapacities, setMaxCapacities] = useState([9999])
     const { provider, isReady } = useProvider()
 
 
@@ -14,7 +17,7 @@ export default function useGetCapacities() {
         console.log(isReady)
         console.log(provider)
         async function getCapacities() {
-            if (isReady) {
+            if (isReady && currentCapacities.length <= NUM_LOTS) {
                 console.log("Loading Capacities")
                 setLoading(true)
                 console.log(provider)
@@ -25,10 +28,9 @@ export default function useGetCapacities() {
                 )
                 console.log(contract)
                 console.log("using contract at address: " + ChainPark.networks[5].address)
-                const lotCount = 26
                 const currentCapacities = []
                 const maxCapacities = []
-                for (let i = 0; i < lotCount; i++) {
+                for (let i = 1; i <= NUM_LOTS; i++) {
                     const cur = await contract.lotCurrentCapacities(i)
                     const max = await contract.lotMaxCapacities(i)
                     // currentCapacities.push(cur.toNumber())

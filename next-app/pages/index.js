@@ -1,21 +1,34 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import { ethers } from "ethers"
 import styles from '../styles/Home.module.css'
-import { useAccount, Web3Button, useContract } from "@web3modal/react"
-import { Nav, Navbar, NavDropdown, Container, Table } from 'react-bootstrap'
+import { useAccount, Web3Button, useSigner, useProvider } from "@web3modal/react"
+import { Nav, Navbar, NavDropdown, Container, Table, Button } from 'react-bootstrap'
 import ChainPark from '../../truffle/build/contracts/ChainPark.json'
 import useGetCapacities from '../hooks/useGetCapacities'
+
+
+/*
+TODOS:
+ if you are parked, only show leave and claim
+ if you are not parked, dont show leave
+ call chainpark contract to get lot fee
+*/
 
 
 const NETWORK_ID = 5
 
 const Home = () => {
   const { account } = useAccount()
+  const { provider, isReady } = useProvider()
+  const { data: signer, error, isLoading } = useSigner()
   const [currentCapacities, maxCapacities, loading] = useGetCapacities()
-  const { ChainParkContract } = useContract({
-    address: ChainPark.networks[5].address,
-    abi: ChainPark.abi
-  })
+
+  const chainParkContract = new ethers.Contract(
+    ChainPark.networks[5].address,
+    ChainPark.abi,
+    isLoading ? provider : signer
+  )
 
   const LOT_LIST = [
     "NONE",
@@ -48,17 +61,32 @@ const Home = () => {
   ]
 
 
-  const renderCapacities = () => {
+  const handleParkButtonClick = (index) => {
+      let tx = chainParkContract.park(index)
+      tx.then((tx) => {
+        console.log(tx)
+      })
 
-    let items = maxCapacities.map((capacity, index) => {
-      return (
-        <tr>
-          <th>{LOT_LIST[index]}</th>
-          <th>{currentCapacities[index]}</th>
-          <th>{capacity}</th>
-        </tr>
-      )
+  }
+
+
+  const renderCapacities = () => {
+    console.log(maxCapacities)
+    let items = []
+    maxCapacities.forEach((capacity, index) => {
+      if (index < LOT_LIST.length) {
+        items.push(
+          <tr key={index}>
+            <th>{LOT_LIST[index]}</th>
+            <th>{currentCapacities[index]}</th>
+            <th>{capacity}</th>
+            <th>{currentCapacities[index] / maxCapacities[index] * 10} UBPC</th>
+            <th><Button variant="outline-success" size="sm" onClick={() =>handleParkButtonClick(index)}>Park at {LOT_LIST[index]}</Button></th>
+          </tr>
+        )
+      }
     })
+
     // console.log(items)
     return (
       <Table striped bordered hover size="sm">
@@ -67,10 +95,12 @@ const Home = () => {
             <th>Parking Lot</th>
             <th>Current Capacity</th>
             <th>Max Capacity</th>
+            <th>Current Fee</th>
+            <th>Park Here</th>
           </tr>
         </thead>
         <tbody>
-          {items}
+          {items.slice(1)}
         </tbody>
       </Table>
     )
