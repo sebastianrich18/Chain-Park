@@ -1,13 +1,83 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { useAccount, Web3Button } from "@web3modal/react"
-import { Nav, Navbar, NavDropdown, Container } from 'react-bootstrap'
+import { useAccount, Web3Button, useContract } from "@web3modal/react"
+import { Nav, Navbar, NavDropdown, Container, Table } from 'react-bootstrap'
+import ChainPark from '../../truffle/build/contracts/ChainPark.json'
+import useGetCapacities from '../hooks/useGetCapacities'
 
 
+const NETWORK_ID = 5
 
-export default function Home() {
+const Home = () => {
   const { account } = useAccount()
+  const [currentCapacities, maxCapacities, loading] = useGetCapacities()
+  const { ChainParkContract } = useContract({
+    address: ChainPark.networks[5].address,
+    abi: ChainPark.abi
+  })
+
+  const LOT_LIST = [
+    "NONE",
+    "Arena",
+    "Alumni A, B, C",
+    "Baird A",
+    "Baird B",
+    "Cooke A, B",
+    "Crofts",
+    "Fargo",
+    "Furnas",
+    "Governors A",
+    "Governors B, C, D",
+    "Governors E",
+    "Hochstetter A",
+    "Hochstetter B",
+    "Jacobs A",
+    "Jacobs B, C",
+    "Jarvis A",
+    "Jarvis B",
+    "Ketter",
+    "Lake LaSalle",
+    "Red Jacket",
+    "Richmond A",
+    "Richmond B",
+    "Special Event Parking",
+    "Stadium",
+    "Slee A, B",
+    "Fronzack"
+  ]
+
+
+  const renderCapacities = () => {
+    if (loading) {
+      return <p>Loading...</p>
+    }
+    let items = maxCapacities.map((capacity, index) => {
+      return (
+        <tr>
+          <th>{LOT_LIST[index]}</th>
+          <th>{currentCapacities[index]}</th>
+          <th>{capacity}</th>
+        </tr>
+      )
+    })
+    console.log(items)
+    return (
+      <Table striped bordered hover size="sm">
+        <thead>
+          <tr>
+            <th>Parking Lot</th>
+            <th>Current Capacity</th>
+            <th>Max Capacity</th>
+          </tr>
+        </thead>
+        <tbody>
+          {items}
+        </tbody>
+      </Table>
+    )
+  }
+
 
   return (
     <div>
@@ -30,6 +100,24 @@ export default function Home() {
           <Web3Button />
         </Container>
       </Navbar>
+
+      <Container id="find">
+        <h1>Find A Spot</h1>
+        {renderCapacities()}
+      </Container>
+
+      <Container id="park">
+        <h1>Park</h1>
+      </Container>
+
+      <Container id="leave">
+        <h1>Leave</h1>
+      </Container>
+
+      <Container id="claim">
+        <h1>Claim</h1>
+      </Container>
     </div>
   )
 }
+export default Home
