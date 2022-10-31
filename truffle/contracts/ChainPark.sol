@@ -9,7 +9,7 @@ contract ChainPark {
   mapping(address=>bool) staff;
   mapping(address=>uint) lastClaimed; // timestamp
   mapping(address=>uint) parksSinceClaim;
-  mapping(address=>uint) currentlyParked; // NOT_PARKED if not parked, otherwise lotIndex
+  mapping(address=>uint) public currentlyParked; // NOT_PARKED if not parked, otherwise lotIndex
   uint[] public lotMaxCapacities; // index 0 is not used. Lots are 1-indexed so that 0 can be used to represent not parked
   uint[] public lotCurrentCapacities;
   enum lotType {Staff, Student, Both}
@@ -53,7 +53,7 @@ contract ChainPark {
 
   function park(uint lotIndex) public payable notFull(lotIndex) {
     require(msg.value >= getFee(lotIndex), "Insufficient funds.");
-    // require(lotIndex != 0, "Lot index cannot be 0.");
+    require(lotIndex != 0, "Lot index cannot be 0.");
     require(currentlyParked[msg.sender] == 0, "You are already parked.");
 
     if (lotTypes[lotIndex] == lotType.Staff) {
