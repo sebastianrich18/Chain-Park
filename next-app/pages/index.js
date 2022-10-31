@@ -5,7 +5,7 @@ import styles from '../styles/Home.module.css'
 import { useAccount, Web3Button, useSigner, useProvider } from "@web3modal/react"
 import { Nav, Navbar, NavDropdown, Container, Table, Button } from 'react-bootstrap'
 import ChainPark from '../../truffle/build/contracts/ChainPark.json'
-import useGetCapacities from '../hooks/useGetCapacities'
+import useGetLotInfo from '../hooks/useGetLotInfo'
 
 
 /*
@@ -13,6 +13,7 @@ TODOS:
  if you are parked, only show leave and claim
  if you are not parked, dont show leave
  call chainpark contract to get lot fee
+ refresh icon to refresh capacities
 */
 
 
@@ -22,7 +23,7 @@ const Home = () => {
   const { account } = useAccount()
   const { provider, isReady } = useProvider()
   const { data: signer, error, isLoading } = useSigner()
-  const [currentCapacities, maxCapacities, loading] = useGetCapacities()
+  const [currentCapacities, maxCapacities, lotFees] = useGetLotInfo()
 
   const chainParkContract = new ethers.Contract(
     ChainPark.networks[5].address,
@@ -71,7 +72,7 @@ const Home = () => {
 
 
   const renderCapacities = () => {
-    console.log(maxCapacities)
+    // console.log(maxCapacities)
     let items = []
     maxCapacities.forEach((capacity, index) => {
       if (index < LOT_LIST.length) {
@@ -80,7 +81,7 @@ const Home = () => {
             <th>{LOT_LIST[index]}</th>
             <th>{currentCapacities[index]}</th>
             <th>{capacity}</th>
-            <th>{currentCapacities[index] / maxCapacities[index] * 10} UBPC</th>
+            <th>{lotFees[index]} UBPC</th>
             <th><Button variant="outline-success" size="sm" onClick={() =>handleParkButtonClick(index)}>Park at {LOT_LIST[index]}</Button></th>
           </tr>
         )
