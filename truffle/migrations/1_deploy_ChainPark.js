@@ -37,7 +37,7 @@ module.exports = function(deployer) {
   // for lot types, 0=Staff, 1=Student, 2=Both
 
   let lotTypes = [2, 1, 2, 2, 0, 2, 2, 2, 0, 0, 2, 1, 0, 2, 0, 2, 2, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2]
-  let maxFee = 10
+  let maxFee = 1
   let dailyIncome = 5
   deployer.deploy(ChainPark, lotMaxCap, lotTypes, maxFee, dailyIncome);
 

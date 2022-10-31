@@ -43,25 +43,6 @@ contract ChainPark {
     dailyIncome = _dailyIncome;
   }
 
-  function setMaxCapacities(uint[] memory _lotMaxCapacities) public onlyAdmin {
-    lotMaxCapacities = _lotMaxCapacities;
-  }
-
-  function setLotTypes(lotType[] memory _lotTypes) public onlyAdmin {
-    lotTypes = _lotTypes;
-  }
-
-  function setMaxFee(uint256 _maxFee) public onlyAdmin {
-    maxFee = _maxFee;
-  }
-
-  function setDailyIncome(uint _dailyIncome) public onlyAdmin {
-    dailyIncome = _dailyIncome;
-  }
-
-  function setAdmin(address newAdmin) public onlyAdmin {
-    admin = newAdmin;
-  }
 
   function getFee(uint lotIndex) public view returns (uint) {
     if (lotCurrentCapacities[lotIndex] == 0) {
@@ -72,7 +53,9 @@ contract ChainPark {
 
   function park(uint lotIndex) public payable notFull(lotIndex) {
     require(msg.value >= getFee(lotIndex), "Insufficient funds.");
+    // require(lotIndex != 0, "Lot index cannot be 0.");
     require(currentlyParked[msg.sender] == 0, "You are already parked.");
+
     if (lotTypes[lotIndex] == lotType.Staff) {
       parkStaff(lotIndex);
     } else {
@@ -110,5 +93,30 @@ contract ChainPark {
     parksSinceClaim[msg.sender] = 0;
     payable(msg.sender).transfer(amount);
     emit Claimed(msg.sender, amount);
+  }
+
+  function addStaff(address staffMember) public onlyAdmin {
+    staff[staffMember] = true;
+  }
+
+
+  function setMaxCapacities(uint[] memory _lotMaxCapacities) public onlyAdmin {
+    lotMaxCapacities = _lotMaxCapacities;
+  }
+
+  function setLotTypes(lotType[] memory _lotTypes) public onlyAdmin {
+    lotTypes = _lotTypes;
+  }
+
+  function setMaxFee(uint256 _maxFee) public onlyAdmin {
+    maxFee = _maxFee;
+  }
+
+  function setDailyIncome(uint _dailyIncome) public onlyAdmin {
+    dailyIncome = _dailyIncome;
+  }
+
+  function setAdmin(address newAdmin) public onlyAdmin {
+    admin = newAdmin;
   }
 }
