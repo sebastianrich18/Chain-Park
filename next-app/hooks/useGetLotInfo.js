@@ -50,5 +50,5 @@ export default function useGetLotInfo() {
         getCapacities()
     }, [isReady])
 
-    return [currentCapacities, maxCapacities, lotFees]
+    return [currentCapacities, maxCapacities, lotFees, loading]
 }

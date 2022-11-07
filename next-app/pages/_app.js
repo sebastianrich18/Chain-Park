@@ -10,8 +10,8 @@ const config = {
   accentColor: 'blue',
   ethereum: {
     appName: 'ChainPark',
-    chains: [chains.goerli, chains.sepolia, chains.localhost],
-    providers: [providers.walletConnectProvider({ projectId: '21951b1cdb76de6c32fb1283cd60d8f8' })]
+    chains: [chains.goerli],
+    providers: [providers.infuraProvider({ apiKey: "7967861d9f614657b268b967b155dadb"})]
   },
   autoConnect: false
 }
