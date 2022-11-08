@@ -9,7 +9,7 @@ export default function useGetCurrentLot() {
 
     const { account } = useAccount();
     const [lotLoading, setLotLoading] = useState(true)
-    const [currentLot, setCurrentLot] = useState(1)
+    const [currentLot, setCurrentLot] = useState(0)
     const { provider, isReady } = useProvider()
 
 
@@ -23,6 +23,7 @@ export default function useGetCurrentLot() {
                     provider
                 )
                 let lot = await contract.currentlyParked(account.address)
+                console.log(currentLot)
                 setCurrentLot(lot.toNumber())
                 setLotLoading(false)
             }

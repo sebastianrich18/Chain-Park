@@ -7,6 +7,7 @@ import { Nav, Navbar, NavDropdown, Container, Table, Button } from 'react-bootst
 import ChainPark from '../../truffle/build/contracts/ChainPark.json'
 import useGetLotInfo from '../hooks/useGetLotInfo'
 import useGetCurrentLot from '../hooks/useGetCurrentLot'
+import useAlert from '../hooks/useAlert'
 import { useEffect, useState } from 'react'
 
 
@@ -22,7 +23,7 @@ TODOS:
 const NETWORK_ID = 5
 
 const Home = () => {
-  const [ ]
+  const [renderAlert, setShow, setIsError, setMessage] = useAlert()
   const [ currentLot, setCurrentLot, lotLoading ] = useGetCurrentLot();
   const { account } = useAccount();
   const { provider, isReady } = useProvider();
@@ -65,20 +66,32 @@ const Home = () => {
     "Fronzack"
   ]
 
-  const handleParkButtonClick = (index) => {
-    let tx = chainParkContract.park(index)
-    tx.then((tx) => {
-      console.log(tx)
-      setCurrentLot(index)
-    })
+  const handleParkButtonClick = async (index) => {
+    let tx = await chainParkContract.park(index)
+    let res = await tx.wait()
+    console.log(tx)
+    console.log(res)
+    if (res.status == 1) {
+      setShow(true)
+      setIsError(false)
+      setMessage("Successfully parked in lot " + LOT_LIST[index])
+    }
   }
 
-  const handleLeaveButtonClick = () => {
-    let tx = chainParkContract.leave()
-    tx.then((tx) => {
-      console.log(tx)
-      setCurrentLot(0)
-    })
+  const handleLeaveButtonClick = async () => {
+    let tx = await chainParkContract.leave()
+    let res = await tx.wait()
+    console.log(tx)
+    console.log(res)
+    if (res.status == 1) {
+      setShow(true)
+      setIsError(false)
+      setMessage("Successfully left lot " + LOT_LIST[currentLot])
+    } else {
+      setShow(true)
+      setIsError(true)
+      setMessage("Error leaving lot " + LOT_LIST[currentLot])
+    }
   }
 
   const renderCapacities = () => {
@@ -90,7 +103,6 @@ const Home = () => {
         </div>
       )
     }
-
     if (currentLot > 0) {
       return (
         <div>
@@ -148,16 +160,23 @@ const Home = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link href="#find">Find A Spot</Nav.Link>
+              <Nav.Link href="#leave">Leave</Nav.Link>
               <Nav.Link href="#claim">Claim</Nav.Link>
             </Nav>
           </Navbar.Collapse>
           <Web3Button />
         </Container>
       </Navbar>
+      {renderAlert()}
 
       <Container id="find">
         <h1>Find A Spot</h1>
         {renderCapacities()}
+      </Container>
+
+      <Container id="leave">
+        <h1>Leave</h1>
+        <Button variant="danger" onClick={() => handleLeaveButtonClick()}>Leave {LOT_LIST[currentLot]}</Button>
       </Container>
 
       <Container id="claim">
