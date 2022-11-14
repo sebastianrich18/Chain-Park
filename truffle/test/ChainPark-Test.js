@@ -41,7 +41,6 @@ contract("ChainPark", function (accounts) {
     }),
 
     it("should not let you leave if not parked", async function () {
-
       const cpInstance = await ChainPark.deployed();
       try {
         await cpInstance.leave({ from: accounts[0] });
@@ -66,10 +65,7 @@ contract("ChainPark", function (accounts) {
       for (let i=0; i<8; i++) {
         await cpInstance.leave({ from: accounts[i]});
       }
-
-
     }),
-
 
 
     it("should be able to park at same lot again after leaving", async function () {

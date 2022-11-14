@@ -8,11 +8,10 @@ export default function useGetLotInfo() {
     const NUM_LOTS = 26
 
     const [loading, setLoading] = useState(true)
-    const [currentCapacities, setCurrentCapacities] = useState([9999])
-    const [maxCapacities, setMaxCapacities] = useState([9999])
-    const [lotFees, setLotFees] = useState([9999])
+    const [currentCapacities, setCurrentCapacities] = useState([9999, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    const [maxCapacities, setMaxCapacities] = useState([9999, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    const [lotFees, setLotFees] = useState([9999, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
     const { provider, isReady } = useProvider()
-
 
     useEffect(() => {
         // console.log(isReady)
@@ -30,17 +29,38 @@ export default function useGetLotInfo() {
                 // console.log(contract)
                 console.log("using contract at address: " + ChainPark.networks[5].address)
                 for (let i = 1; i <= NUM_LOTS; i++) {
-                    contract.lotCurrentCapacities(i).then((cur) => {
-                        setCurrentCapacities(old => [...old, cur.toNumber()]) // Pretty sure this doesn't guarantee index order
-                    })
+                    // contract.lotCurrentCapacities(i).then((cur) => {
+                    //     let newCurrentCapacities = currentCapacities
+                    //     newCurrentCapacities[i] = cur.toNumber()
+                    //     setCurrentCapacities(newCurrentCapacities)
+                    // })
 
-                    contract.lotMaxCapacities(i).then((max) => {
-                        setMaxCapacities(old => [...old, max.toNumber()])
-                    })
+                    // contract.lotMaxCapacities(i).then((max) => {
+                    //     let newMaxCapacities = maxCapacities
+                    //     newMaxCapacities[i] = max.toNumber()
+                    //     setMaxCapacities(newMaxCapacities)
+                    // })
 
-                    contract.getFee(i).then((fee) => {
-                        setLotFees(old => [...old, fee.toNumber()])
-                    })
+                    // contract.getFee(i).then((fee) => {
+                    //     let newLotFees = lotFees
+                    //     newLotFees[i] = fee.toBigInt()
+                    //     setLotFees(newLotFees)
+                    // })
+                    
+                    let cur = await contract.lotCurrentCapacities(i)
+                    let newCurrentCapacities = currentCapacities
+                    newCurrentCapacities[i] = cur.toNumber()
+                    setCurrentCapacities(newCurrentCapacities)
+
+                    let max = await contract.lotMaxCapacities(i)
+                    let newMaxCapacities = maxCapacities
+                    newMaxCapacities[i] = max.toNumber()
+                    setMaxCapacities(newMaxCapacities)
+
+                    let fee = await contract.getFee(i)
+                    let newLotFees = lotFees
+                    newLotFees[i] = fee.toBigInt()
+                    setLotFees(newLotFees)
                 }
                 // setCurrentCapacities(currentCapacities)
                 // setMaxCapacities(maxCapacities)

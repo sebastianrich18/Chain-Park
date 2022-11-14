@@ -67,11 +67,12 @@ const Home = () => {
   ]
 
   const handleParkButtonClick = async (index) => {
-    let tx = await chainParkContract.park(index)
+    let tx = await chainParkContract.park(index, {value: lotFees[index]})
     let res = await tx.wait()
     console.log(tx)
     console.log(res)
     if (res.status == 1) {
+      setCurrentLot(index)
       setShow(true)
       setIsError(false)
       setMessage("Successfully parked in lot " + LOT_LIST[index])
@@ -84,6 +85,7 @@ const Home = () => {
     console.log(tx)
     console.log(res)
     if (res.status == 1) {
+      setCurrentLot(0)
       setShow(true)
       setIsError(false)
       setMessage("Successfully left lot " + LOT_LIST[currentLot])
@@ -103,16 +105,18 @@ const Home = () => {
         </div>
       )
     }
-    if (currentLot > 0) {
-      return (
-        <div>
-          <p>You are currently parked at {LOT_LIST[currentLot]}</p>
-          <Button variant="danger" onClick={() => handleLeaveButtonClick()}>Leave {LOT_LIST[currentLot]}</Button>
-        </div>
-      )
-    }
+
+    // if (currentLot > 0) {
+    //   return (
+    //     <div>
+    //       <p>You are currently parked at {LOT_LIST[currentLot]}</p>
+    //       <Button variant="danger" onClick={() => handleLeaveButtonClick()}>Leave {LOT_LIST[currentLot]}</Button>
+    //     </div>
+    //   )
+    // }
 
     let items = []
+    console.log(maxCapacities)
     maxCapacities.forEach((capacity, index) => {
       if (index < LOT_LIST.length) {
         items.push(
@@ -120,7 +124,7 @@ const Home = () => {
             <th>{LOT_LIST[index]}</th>
             <th>{currentCapacities[index]}</th>
             <th>{capacity}</th>
-            <th>{lotFees[index]} UBPC</th>
+            <th>{lotFees[index] ? ethers.utils.formatEther(lotFees[index]): 0.0} ETH</th>
             <th><Button variant="outline-success" size="sm" onClick={() => handleParkButtonClick(index)}>Park at {LOT_LIST[index]}</Button></th>
           </tr>
         )

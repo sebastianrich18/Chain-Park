@@ -95,6 +95,10 @@ contract ChainPark {
     emit Claimed(msg.sender, amount);
   }
 
+  function withdraw() public onlyAdmin {
+    payable(msg.sender).transfer(address(this).balance);
+  }
+
   function addStaff(address staffMember) public onlyAdmin {
     staff[staffMember] = true;
   }
