@@ -6,7 +6,7 @@ contract ChainPark {
   uint256 public maxFee; // the cost to park if you are the last person to park
   uint dailyIncome; // the amount you will earn if you do not park for a day
   //uint constant NOT_PARKED = 2**256 - 1; // use max uint to represent not parked
-  mapping(address=>bool) staff;
+  // mapping(address=>bool) staff;
   mapping(address=>uint) lastClaimed; // timestamp
   mapping(address=>uint) parksSinceClaim;
   mapping(address=>uint) public currentlyParked; // NOT_PARKED if not parked, otherwise lotIndex
@@ -24,10 +24,10 @@ contract ChainPark {
     _;
   }
 
-  modifier onlyStaff() {
-    require(staff[msg.sender], "Only staff can call this function.");
-    _;
-  }
+  // modifier onlyStaff() {
+  //   require(staff[msg.sender], "Only staff can call this function.");
+  //   _;
+  // }
 
   modifier notFull(uint lotIndex) {
     require(lotCurrentCapacities[lotIndex] < lotMaxCapacities[lotIndex], "Lot is full.");
@@ -56,26 +56,30 @@ contract ChainPark {
     require(lotIndex != 0, "Lot index cannot be 0.");
     require(currentlyParked[msg.sender] == 0, "You are already parked.");
 
-    if (lotTypes[lotIndex] == lotType.Staff) {
-      parkStaff(lotIndex);
-    } else {
-      parkStudent(lotIndex);
-    }
-  }
+    // if (lotTypes[lotIndex] == lotType.Staff) {
+    //   parkStaff(lotIndex);
+    // } else {
+    //   parkStudent(lotIndex);
+    // }
 
-  function parkStudent(uint lotIndex) private {
-    require(lotTypes[lotIndex] != lotType.Staff, "This lot is for staff only.");
     lotCurrentCapacities[lotIndex]++;
     currentlyParked[msg.sender] = lotIndex;
     emit Parked(msg.sender, lotIndex);
   }
 
-  function parkStaff(uint lotIndex) private onlyStaff {
-    require(lotTypes[lotIndex] != lotType.Student, "This lot is for students only.");
-    lotCurrentCapacities[lotIndex]++;
-    currentlyParked[msg.sender] = lotIndex;
-    emit Parked(msg.sender, lotIndex);
-  }
+  // function parkStudent(uint lotIndex) private {
+  //   require(lotTypes[lotIndex] != lotType.Staff, "This lot is for staff only.");
+  //   lotCurrentCapacities[lotIndex]++;
+  //   currentlyParked[msg.sender] = lotIndex;
+  //   emit Parked(msg.sender, lotIndex);
+  // }
+
+  // function parkStaff(uint lotIndex) private onlyStaff {
+  //   require(lotTypes[lotIndex] != lotType.Student, "This lot is for students only.");
+  //   lotCurrentCapacities[lotIndex]++;
+  //   currentlyParked[msg.sender] = lotIndex;
+  //   emit Parked(msg.sender, lotIndex);
+  // }
 
   function leave() public {
     require(currentlyParked[msg.sender] != 0, "You are not parked.");
@@ -99,9 +103,9 @@ contract ChainPark {
     payable(msg.sender).transfer(address(this).balance);
   }
 
-  function addStaff(address staffMember) public onlyAdmin {
-    staff[staffMember] = true;
-  }
+  // function addStaff(address staffMember) public onlyAdmin {
+  //   staff[staffMember] = true;
+  // }
 
 
   function setMaxCapacities(uint[] memory _lotMaxCapacities) public onlyAdmin {
