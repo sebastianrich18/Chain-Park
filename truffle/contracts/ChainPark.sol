@@ -12,8 +12,8 @@ contract ChainPark {
   mapping(address=>uint) public currentlyParked; // NOT_PARKED if not parked, otherwise lotIndex
   uint[] public lotMaxCapacities; // index 0 is not used. Lots are 1-indexed so that 0 can be used to represent not parked
   uint[] public lotCurrentCapacities;
-  enum lotType {Staff, Student, Both}
-  lotType[] lotTypes;
+  // enum lotType {Staff, Student, Both}
+  // lotType[] lotTypes;
 
   event Parked(address indexed user, uint lotIndex);
   event Left(address indexed user, uint lotIndex);
@@ -34,10 +34,9 @@ contract ChainPark {
     _;
   }
 
-  constructor(uint[] memory _lotMaxCapacities, lotType[] memory _lotTypes, uint256 _maxFee, uint _dailyIncome) {
+  constructor(uint[] memory _lotMaxCapacities, uint256 _maxFee, uint _dailyIncome) {
     maxFee = _maxFee;
     admin = msg.sender;
-    lotTypes = _lotTypes;
     lotMaxCapacities = _lotMaxCapacities;
     lotCurrentCapacities = new uint[](_lotMaxCapacities.length);
     dailyIncome = _dailyIncome;
@@ -112,9 +111,9 @@ contract ChainPark {
     lotMaxCapacities = _lotMaxCapacities;
   }
 
-  function setLotTypes(lotType[] memory _lotTypes) public onlyAdmin {
-    lotTypes = _lotTypes;
-  }
+  // function setLotTypes(lotType[] memory _lotTypes) public onlyAdmin {
+  //   lotTypes = _lotTypes;
+  // }
 
   function setMaxFee(uint256 _maxFee) public onlyAdmin {
     maxFee = _maxFee;
