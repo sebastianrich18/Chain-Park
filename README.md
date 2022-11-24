@@ -10,5 +10,5 @@
 3. Install next.js dependencies `cd next-app && npm install` <br>
 
 # Deployments
-* [IPFS](https://ipfs.io/ipns/k51qzi5uqu5dinregegexaehc13j4apbdhy7rx2georee1sud0wcyanu4tttvf)
-* [Vercel](https://chain-park.vercel.app/)
+* IPFS: (https://ipfs.io/ipns/k51qzi5uqu5dinregegexaehc13j4apbdhy7rx2georee1sud0wcyanu4tttvf)
+* Vercel: (https://chain-park.vercel.app/)
