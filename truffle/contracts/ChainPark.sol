@@ -112,7 +112,7 @@ contract ChainPark  {
     uint amount = (daysSinceClaim - parksSinceClaim[msg.sender]) * dailyIncome; // you will not get paid for the days you parked
     lastClaimed[msg.sender] = block.timestamp;
     parksSinceClaim[msg.sender] = 0;
-    payable(msg.sender).transfer(amount);
+    mint(msg.sender, amount);
     emit Claimed(msg.sender, amount);
   }
 
