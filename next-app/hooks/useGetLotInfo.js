@@ -28,43 +28,54 @@ export default function useGetLotInfo() {
                 )
                 // console.log(contract)
                 console.log("using contract at address: " + ChainPark.networks[5].address)
-                for (let i = 1; i <= NUM_LOTS; i++) {
-                    // contract.lotCurrentCapacities(i).then((cur) => {
-                    //     let newCurrentCapacities = currentCapacities
-                    //     newCurrentCapacities[i] = cur.toNumber()
-                    //     setCurrentCapacities(newCurrentCapacities)
-                    // })
+                // for (let i = 1; i <= NUM_LOTS; i++) {
+                //     // contract.lotCurrentCapacities(i).then((cur) => {
+                //     //     let newCurrentCapacities = currentCapacities
+                //     //     newCurrentCapacities[i] = cur.toNumber()
+                //     //     setCurrentCapacities(newCurrentCapacities)
+                //     // })
 
-                    // contract.lotMaxCapacities(i).then((max) => {
-                    //     let newMaxCapacities = maxCapacities
-                    //     newMaxCapacities[i] = max.toNumber()
-                    //     setMaxCapacities(newMaxCapacities)
-                    // })
+                //     // contract.lotMaxCapacities(i).then((max) => {
+                //     //     let newMaxCapacities = maxCapacities
+                //     //     newMaxCapacities[i] = max.toNumber()
+                //     //     setMaxCapacities(newMaxCapacities)
+                //     // })
 
-                    // contract.getFee(i).then((fee) => {
-                    //     let newLotFees = lotFees
-                    //     newLotFees[i] = fee.toBigInt()
-                    //     setLotFees(newLotFees)
-                    // })
+                //     // contract.getFee(i).then((fee) => {
+                //     //     let newLotFees = lotFees
+                //     //     newLotFees[i] = fee.toBigInt()
+                //     //     setLotFees(newLotFees)
+                //     // })
                     
-                    let cur = await contract.lotCurrentCapacities(i)
-                    let newCurrentCapacities = currentCapacities
-                    newCurrentCapacities[i] = cur.toNumber()
-                    setCurrentCapacities(newCurrentCapacities)
+                //     let cur = await contract.lotCurrentCapacities(i)
+                //     let newCurrentCapacities = currentCapacities
+                //     newCurrentCapacities[i] = cur.toNumber()
+                //     setCurrentCapacities(newCurrentCapacities)
 
-                    let max = await contract.lotMaxCapacities(i)
-                    let newMaxCapacities = maxCapacities
-                    newMaxCapacities[i] = max.toNumber()
-                    setMaxCapacities(newMaxCapacities)
+                //     let max = await contract.lotMaxCapacities(i)
+                //     let newMaxCapacities = maxCapacities
+                //     newMaxCapacities[i] = max.toNumber()
+                //     setMaxCapacities(newMaxCapacities)
 
-                    let fee = await contract.getFee(i)
-                    let newLotFees = lotFees
-                    newLotFees[i] = fee.toBigInt()
-                    setLotFees(newLotFees)
-                }
+                //     let fee = await contract.getFee(i)
+                //     let newLotFees = lotFees
+                //     newLotFees[i] = fee.toBigInt()
+                //     setLotFees(newLotFees)
+                // }
                 // setCurrentCapacities(currentCapacities)
                 // setMaxCapacities(maxCapacities)
+                contract.getLotMaxCapacities().then((maxCapacities) => {
+                    let asNum = maxCapacities.map((x) => x.toNumber())
+                    setMaxCapacities(asNum)
+                })
+                contract.getLotCurrentCapacities().then((currentCapacities) => {
+                    // console.log(currentCapacities)
+                    let asNum = currentCapacities.map((x) =>  x.toNumber())
+                    setCurrentCapacities(asNum)
+                })
                 setLoading(false)
+                
+
             }
         }
         getCapacities()
