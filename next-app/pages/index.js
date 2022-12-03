@@ -72,6 +72,7 @@ const Home = () => {
     console.log(tx)
     console.log(res)
     if (res.status == 1) {
+      setCurrentCapacities(currentCapacities.map((x, i) => i == currentLot ? x + 1 : x))
       setCurrentLot(index)
       setShow(true)
       setIsError(false)
@@ -85,7 +86,7 @@ const Home = () => {
     console.log(tx)
     console.log(res)
     if (res.status == 1) {
-      setCurrentCapacities(currentCapacities.map((x, i) => i == currentLot ? x + 1 : x))
+      setCurrentCapacities(currentCapacities.map((x, i) => i == currentLot ? x - 1 : x))
       setCurrentLot(0)
       setShow(true)
       setIsError(false)
