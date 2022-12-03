@@ -4,9 +4,17 @@ pragma solidity >=0.4.22 <0.9.0;
 // import IERC20 from openzeppelin
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract ChainPark {
+abstract contract IUBPC is IERC20 {
+  function mint(address account, uint256 amount) public virtual;
+  function claim_airdrop() public virtual;
+  function setChainPark(address _chainParkAddr) public virtual;
+}
+
+
+
+contract ChainPark  {
   address admin;
-  IERC20 UBPC_CONTRACT;
+  address UBPC_CONTRACT;
   uint256 public maxFee; // the cost to park if you are the last person to park
   uint dailyIncome; // the amount you will earn if you do not park for a day
   //uint constant NOT_PARKED = 2**256 - 1; // use max uint to represent not parked
@@ -43,7 +51,7 @@ contract ChainPark {
     admin = msg.sender;
     lotMaxCapacities = _lotMaxCapacities;
     lotCurrentCapacities = new uint[](_lotMaxCapacities.length);
-    UBPC_CONTRACT = IERC20(_ubpcContractAddr);
+    UBPC_CONTRACT = _ubpcContractAddr;
     maxFee = _maxFee;
     dailyIncome = _dailyIncome;
   }
@@ -70,6 +78,10 @@ contract ChainPark {
     lotCurrentCapacities[lotIndex]++;
     currentlyParked[msg.sender] = lotIndex;
     emit Parked(msg.sender, lotIndex);
+  }
+
+  function mint(address account, uint256 amount) internal {
+    IUBPC(UBPC_CONTRACT).mint(account, amount);
   }
 
   // function parkStudent(uint lotIndex) private {
