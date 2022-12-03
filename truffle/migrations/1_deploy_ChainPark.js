@@ -40,22 +40,17 @@ module.exports = async function (deployer) {
   // let lotTypes = [2, 1, 2, 2, 0, 2, 2, 2, 0, 0, 2, 1, 0, 2, 0, 2, 2, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2]
   let maxFee = ethers.utils.parseEther("0.1");
   let dailyIncome = 5
+  
   let initalSupply = 1_000_000
-  deployer.deploy(UBPC, initalSupply, ChainPark.address, { overwrite: true }) // deploy the UBPC token
-    .then(async function () {
-      let ubpc = await UBPC.deployed();
-      return deployer.deploy(ChainPark, lotMaxCap, ubpc.address, maxFee, dailyIncome, { overwrite: true })
-    })
-    .then(async function () {
-      let chain_park = await ChainPark.deployed();
-      let ubpc = await UBPC.deployed();
-      return ubpc.setChainPark(chain_park.address);
-    })
 
-  // console.log(ChainPark)
+  await deployer.deploy(UBPC, initalSupply, { overwrite: true }) // deploy the UBPC token
+  let ubpc = await UBPC.deployed();
+  
+  await deployer.deploy(ChainPark, lotMaxCap, ubpc.address, maxFee, dailyIncome, { overwrite: true })  // after UBPC is deployed, deploy ChainPark with ubpc's address
+  let chain_park = await ChainPark.deployed();
+  
+  await ubpc.setChainPark(chain_park.address); // once ChainPark is deployed, set ChainPark address in UBPC
 
-  // let initalSupply = 100;
-  // deployer.deploy(UBPC, initalSupply);
 };
 
 // Command to deploy and verify: truffle migrate --network goerli && truffle run verify --network goerli ChainPark UBParkingCredits

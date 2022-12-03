@@ -17,10 +17,9 @@ contract UBParkingCredits is ERC20 {
     _;
   }
 
-  constructor(uint256 initalSupply, address _chainParkAddr) ERC20("UB Parking Credit", "UBPC") {
+  constructor(uint256 initalSupply) ERC20("UB Parking Credit", "UBPC") {
     admin = msg.sender;
     _mint(msg.sender, initalSupply);
-    CHAIN_PARK = _chainParkAddr;
   }
 
   function mint(address account, uint256 amount) public onlyChainPark {

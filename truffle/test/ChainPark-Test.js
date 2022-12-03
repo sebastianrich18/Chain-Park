@@ -1,5 +1,14 @@
 const ChainPark = artifacts.require("ChainPark");
 
+const UBPC = artifacts.require("UBParkingCredits");
+const {
+  BN,           // Big Number support
+  constants,    // Common constants, like the zero address and largest integers
+  expectEvent,  // Assertions for emitted events
+  expectRevert, // Assertions for transactions that should fail
+} = require('@openzeppelin/test-helpers');
+
+
 /*
  * uncomment accounts to access the test accounts made available by the
  * Ethereum client
@@ -14,8 +23,10 @@ contract("ChainPark", function (accounts) {
 
 
 
-  it("should not let you park at lot 0", async function () {
+  it("should revert when parking at lot 0", async function () {
     const cpInstance = await ChainPark.deployed();
+
+    // await expectRevert(cpInstance.park(0, {from: accounts[0]}), "Lot 0 is reserved for staff only");
     try {
       await cpInstance.park(0, { from: accounts[0]});
       0/0
