@@ -28,7 +28,7 @@ const Home = () => {
   const { account } = useAccount();
   const { provider, isReady } = useProvider();
   const { data: signer, error, isLoading } = useSigner();
-  const [currentCapacities, maxCapacities, lotFees] = useGetLotInfo();
+  const [currentCapacities, maxCapacities, lotFees, setCurrentCapacities] = useGetLotInfo();
 
   const chainParkContract = new ethers.Contract(
     ChainPark.networks[NETWORK_ID].address,
@@ -85,6 +85,7 @@ const Home = () => {
     console.log(tx)
     console.log(res)
     if (res.status == 1) {
+      setCurrentCapacities(currentCapacities.map((x, i) => i == currentLot ? x + 1 : x))
       setCurrentLot(0)
       setShow(true)
       setIsError(false)
@@ -116,7 +117,7 @@ const Home = () => {
     // }
 
     let items = []
-    console.log(maxCapacities)
+    console.log(lotFees)
     maxCapacities.forEach((capacity, index) => {
       if (index < LOT_LIST.length) {
         items.push(
@@ -124,7 +125,7 @@ const Home = () => {
             <th>{LOT_LIST[index]}</th>
             <th>{currentCapacities[index]}</th>
             <th>{capacity}</th>
-            <th>{lotFees[index] ? ethers.utils.formatEther(lotFees[index]): 0.0} ETH</th>
+            <th>{lotFees[index] ? ethers.utils.formatEther(lotFees[index]): 0.0} UBPC</th>
             <th><Button variant="outline-success" size="sm" onClick={() => handleParkButtonClick(index)}>Park at {LOT_LIST[index]}</Button></th>
           </tr>
         )
