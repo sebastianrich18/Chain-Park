@@ -133,6 +133,7 @@ const Home = () => {
 
     // console.log(items)
     return (
+      <div>
       <Table striped bordered hover size="sm">
         <thead>
           <tr>
@@ -147,6 +148,17 @@ const Home = () => {
           {items.slice(1)}
         </tbody>
       </Table>
+
+      <Container id="leave">
+      <h1>Leave</h1>
+      <Button variant="danger" onClick={() => handleLeaveButtonClick()}>Leave {LOT_LIST[currentLot]}</Button>
+    </Container>
+
+    <Container id="claim">
+      <h1>Claim</h1>
+      <p>Coming Soon!</p>
+    </Container>
+    </div>
     )
   }
 
@@ -176,16 +188,6 @@ const Home = () => {
       <Container id="find">
         <h1>Find A Spot</h1>
         {renderCapacities()}
-      </Container>
-
-      <Container id="leave">
-        <h1>Leave</h1>
-        <Button variant="danger" onClick={() => handleLeaveButtonClick()}>Leave {LOT_LIST[currentLot]}</Button>
-      </Container>
-
-      <Container id="claim">
-        <h1>Claim</h1>
-        <p>Coming Soon!</p>
       </Container>
     </div>
   )
