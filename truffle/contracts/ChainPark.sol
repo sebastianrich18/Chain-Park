@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
+// import IERC20 from openzeppelin
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 contract ChainPark {
   address admin;
+  IERC20 UBPC_CONTRACT;
   uint256 public maxFee; // the cost to park if you are the last person to park
   uint dailyIncome; // the amount you will earn if you do not park for a day
   //uint constant NOT_PARKED = 2**256 - 1; // use max uint to represent not parked
@@ -14,6 +18,7 @@ contract ChainPark {
   uint[] public lotCurrentCapacities;
   // enum lotType {Staff, Student, Both}
   // lotType[] lotTypes;
+
 
   event Parked(address indexed user, uint lotIndex);
   event Left(address indexed user, uint lotIndex);
@@ -34,11 +39,12 @@ contract ChainPark {
     _;
   }
 
-  constructor(uint[] memory _lotMaxCapacities, uint256 _maxFee, uint _dailyIncome) {
-    maxFee = _maxFee;
+  constructor(uint[] memory _lotMaxCapacities, address _ubpcContractAddr, uint256 _maxFee, uint _dailyIncome) {
     admin = msg.sender;
     lotMaxCapacities = _lotMaxCapacities;
     lotCurrentCapacities = new uint[](_lotMaxCapacities.length);
+    UBPC_CONTRACT = IERC20(_ubpcContractAddr);
+    maxFee = _maxFee;
     dailyIncome = _dailyIncome;
   }
 
@@ -106,6 +112,13 @@ contract ChainPark {
   //   staff[staffMember] = true;
   // }
 
+  function getLotMaxCapacities() public view returns (uint[] memory) {
+    return lotMaxCapacities;
+  }
+
+  function getLotCurrentCapacities() public view returns (uint[] memory) {
+    return lotCurrentCapacities;
+  }
 
   function setMaxCapacities(uint[] memory _lotMaxCapacities) public onlyAdmin {
     lotMaxCapacities = _lotMaxCapacities;
