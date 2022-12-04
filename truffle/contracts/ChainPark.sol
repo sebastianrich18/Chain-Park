@@ -17,8 +17,9 @@ contract ChainPark  {
   address public UBPC_CONTRACT;
   uint256 public maxFee; // the cost to park if you are the last person to park
   uint dailyIncome; // the amount you will earn if you do not park for a day
+  uint staffLot; // lotIndex for lot that is reserved for staff
   //uint constant NOT_PARKED = 2**256 - 1; // use max uint to represent not parked
-  // mapping(address=>bool) staff;
+  mapping(address=>bool) staff;
   mapping(address=>uint) lastClaimed; // timestamp
   mapping(address=>uint) parksSinceClaim;
   mapping(address=>uint) public currentlyParked; // NOT_PARKED if not parked, otherwise lotIndex
@@ -47,13 +48,14 @@ contract ChainPark  {
     _;
   }
 
-  constructor(uint[] memory _lotMaxCapacities, address _ubpcContractAddr, uint256 _maxFee, uint _dailyIncome) {
+  constructor(uint[] memory _lotMaxCapacities, address _ubpcContractAddr, uint256 _maxFee, uint _dailyIncome, uint _staffLot) {
     admin = msg.sender;
     lotMaxCapacities = _lotMaxCapacities;
     lotCurrentCapacities = new uint[](_lotMaxCapacities.length);
     UBPC_CONTRACT = _ubpcContractAddr;
     maxFee = _maxFee;
     dailyIncome = _dailyIncome;
+    staffLot = _staffLot;
   }
 
 
@@ -68,6 +70,10 @@ contract ChainPark  {
     require(checkUBPCBalance(msg.sender) >= getFee(lotIndex), "Insufficient UBPC.");
     require(lotIndex != 0, "Lot index cannot be 0.");
     require(currentlyParked[msg.sender] == 0, "You are already parked.");
+
+    if (lotIndex == staffLot) {
+      require(staff[msg.sender], "Only staff can park in the staff lot.");
+    }
 
     IUBPC(UBPC_CONTRACT).transferFrom(msg.sender, address(this), getFee(lotIndex));
 
@@ -124,6 +130,10 @@ contract ChainPark  {
 
   function setDailyIncome(uint _dailyIncome) public onlyAdmin {
     dailyIncome = _dailyIncome;
+  }
+
+  function setStaff(address _staffAddr) public onlyAdmin {
+    staff[_staffAddr] = true;
   }
 
   function setAdmin(address newAdmin) public onlyAdmin {

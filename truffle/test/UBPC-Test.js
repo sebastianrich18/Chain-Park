@@ -20,7 +20,7 @@ contract("UBParkingCredits", function (accounts) {
   it("inital airdrop claim works", async () => {
     let ubpcInstance = await UBPC.deployed();
     let cpInstance = await ChainPark.deployed();
-    await cpInstance.claim({from : accounts[0]});
+    await cpInstance.claim();
     // let balance = await ubpcInstance.balanceOf(accounts[0]);
     // assert.equal(balance, 100);
   })
