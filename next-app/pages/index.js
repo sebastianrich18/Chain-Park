@@ -5,10 +5,12 @@ import styles from '../styles/Home.module.css'
 import { useAccount, Web3Button, useSigner, useProvider } from "@web3modal/react"
 import { Nav, Navbar, NavDropdown, Container, Table, Button } from 'react-bootstrap'
 import ChainPark from '../../truffle/build/contracts/ChainPark.json'
+import UBParkingCredits from '../../truffle/build/contracts/UBParkingCredits.json'
 import useGetLotInfo from '../hooks/useGetLotInfo'
 import useGetCurrentLot from '../hooks/useGetCurrentLot'
 import useAlert from '../hooks/useAlert'
 import { useEffect, useState } from 'react'
+import { etherscanBlockExplorers } from '@wagmi/core'
 
 
 /*
@@ -33,6 +35,12 @@ const Home = () => {
   const chainParkContract = new ethers.Contract(
     ChainPark.networks[NETWORK_ID].address,
     ChainPark.abi,
+    isLoading ? provider : signer
+  )
+
+  const UBParkingcreditsContract = new ethers.Contract(
+    UBParkingCredits.networks[NETWORK_ID].address,
+    UBParkingCredits.abi,
     isLoading ? provider : signer
   )
 
@@ -65,6 +73,11 @@ const Home = () => {
     "Slee A, B",
     "Fronzack"
   ]
+
+  const handleAirdropButtonClick = async () => {
+    let tx = await UBParkingcreditsContract.claim_airdrop()
+    let res = await tx.wait()
+  }
 
   const handleClaimButtonClick = async () => {
     let tx = await chainParkContract.claim()
@@ -163,9 +176,10 @@ const Home = () => {
 
     <Container id="claim">
       <h1>Claim</h1>
-      <p>claim tokens for consecutive days not parked</p>
-     <Button variant="success" onClick={() => handleClaimButtonClick()}>Claim</Button> 
+     <Button variant="success" onClick={() => handleClaimButtonClick()}>Claim</Button> &nbsp;&nbsp;&nbsp;
+     <Button variant="success" onClick={() => handleAirdropButtonClick()}> One time UBPC airdrop</Button>
     </Container>
+    <p></p>
     </div>
     )
   }
