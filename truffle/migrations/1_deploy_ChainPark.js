@@ -44,10 +44,10 @@ module.exports = async function (deployer) {
   let dailyIncome = ethers.utils.parseEther("20");
   let initalSupply = ethers.utils.bigNumberify(0)
 
-  await deployer.deploy(UBPC, initalSupply, { overwrite: true }) // deploy the UBPC token
+  await deployer.deploy(UBPC, initalSupply) // deploy the UBPC token
   let ubpc = await UBPC.deployed();
 
-  await deployer.deploy(ChainPark, lotMaxCap, ubpc.address, maxFee, dailyIncome, staffLot, { overwrite: true })  // after UBPC is deployed, deploy ChainPark with ubpc's address
+  await deployer.deploy(ChainPark, lotMaxCap, ubpc.address, maxFee, dailyIncome, staffLot)  // after UBPC is deployed, deploy ChainPark with ubpc's address
   let chain_park = await ChainPark.deployed();
 
   await ubpc.setChainPark(chain_park.address); // once ChainPark is deployed, set ChainPark address in UBPC
