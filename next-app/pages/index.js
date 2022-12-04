@@ -67,7 +67,7 @@ const Home = () => {
   ]
 
   const handleParkButtonClick = async (index) => {
-    let tx = await chainParkContract.park(index, {value: lotFees[index]})
+    let tx = await chainParkContract.park(index)
     let res = await tx.wait()
     console.log(tx)
     console.log(res)

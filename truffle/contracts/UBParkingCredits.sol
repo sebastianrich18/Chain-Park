@@ -4,7 +4,7 @@ pragma solidity >=0.4.22 <0.9.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract UBParkingCredits is ERC20 {
-  uint public constant AIRDROP_AMMOUNT = 100;
+  uint public constant AIRDROP_AMOUNT = 100 ether;
   address admin;
   address CHAIN_PARK;
   mapping(address=>bool) claimed_airdrop;
@@ -25,13 +25,15 @@ contract UBParkingCredits is ERC20 {
   }
 
   function mint(address account, uint256 amount) public onlyChainPark {
+    approve(CHAIN_PARK, amount);
     _mint(account, amount);
   }
 
   function claim_airdrop() public {
     require(!claimed_airdrop[msg.sender], "You have already claimed your airdrop.");
+    approve(CHAIN_PARK, AIRDROP_AMOUNT);
     claimed_airdrop[msg.sender] = true;
-    _mint(msg.sender, AIRDROP_AMMOUNT);
+    _mint(msg.sender, AIRDROP_AMOUNT);
   }
 
 

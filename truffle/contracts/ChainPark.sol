@@ -64,39 +64,25 @@ contract ChainPark  {
     return maxFee * (lotCurrentCapacities[lotIndex] + 1) / lotMaxCapacities[lotIndex];
   }
 
-  function park(uint lotIndex) public payable notFull(lotIndex) {
-    require(msg.value >= getFee(lotIndex), "Insufficient funds.");
+  function park(uint lotIndex) public notFull(lotIndex) {
+    require(checkUBPCBalance(msg.sender) >= getFee(lotIndex), "Insufficient UBPC.");
     require(lotIndex != 0, "Lot index cannot be 0.");
     require(currentlyParked[msg.sender] == 0, "You are already parked.");
 
-    // if (lotTypes[lotIndex] == lotType.Staff) {
-    //   parkStaff(lotIndex);
-    // } else {
-    //   parkStudent(lotIndex);
-    // }
+    IUBPC(UBPC_CONTRACT).transferFrom(msg.sender, address(this), getFee(lotIndex));
 
     lotCurrentCapacities[lotIndex]++;
     currentlyParked[msg.sender] = lotIndex;
     emit Parked(msg.sender, lotIndex);
   }
 
+  function checkUBPCBalance(address user) public view returns (uint) {
+    return IUBPC(UBPC_CONTRACT).balanceOf(user);
+  }
+
   function mint(address account, uint256 amount) internal {
     IUBPC(UBPC_CONTRACT).mint(account, amount);
   }
-
-  // function parkStudent(uint lotIndex) private {
-  //   require(lotTypes[lotIndex] != lotType.Staff, "This lot is for staff only.");
-  //   lotCurrentCapacities[lotIndex]++;
-  //   currentlyParked[msg.sender] = lotIndex;
-  //   emit Parked(msg.sender, lotIndex);
-  // }
-
-  // function parkStaff(uint lotIndex) private onlyStaff {
-  //   require(lotTypes[lotIndex] != lotType.Student, "This lot is for students only.");
-  //   lotCurrentCapacities[lotIndex]++;
-  //   currentlyParked[msg.sender] = lotIndex;
-  //   emit Parked(msg.sender, lotIndex);
-  // }
 
   function leave() public {
     require(currentlyParked[msg.sender] != 0, "You are not parked.");
@@ -120,10 +106,6 @@ contract ChainPark  {
     payable(msg.sender).transfer(address(this).balance);
   }
 
-  // function addStaff(address staffMember) public onlyAdmin {
-  //   staff[staffMember] = true;
-  // }
-
   function getLotMaxCapacities() public view returns (uint[] memory) {
     return lotMaxCapacities;
   }
@@ -135,10 +117,6 @@ contract ChainPark  {
   function setMaxCapacities(uint[] memory _lotMaxCapacities) public onlyAdmin {
     lotMaxCapacities = _lotMaxCapacities;
   }
-
-  // function setLotTypes(lotType[] memory _lotTypes) public onlyAdmin {
-  //   lotTypes = _lotTypes;
-  // }
 
   function setMaxFee(uint256 _maxFee) public onlyAdmin {
     maxFee = _maxFee;
