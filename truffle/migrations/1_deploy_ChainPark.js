@@ -1,4 +1,4 @@
-/*ChainPark constructor takes [lotMaxCapacities, lotTypes, maxFee, dailyIncome]
+/*ChainPark constructor takes [lotMaxCapacities, lotTypes, maxFee, dailyIncome, staffLot]
   LOT INDEXES ARE AS FOLLOWS (in order of apperance from the table at https://www.buffalo.edu/parking/parking-places.html):
   0: NONE / NULL
   1: Arena
