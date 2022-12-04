@@ -26,7 +26,7 @@ const NETWORK_ID = 5
 
 const Home = () => {
   const [renderAlert, setShow, setIsError, setMessage] = useAlert()
-  const [ currentLot, setCurrentLot, lotLoading ] = useGetCurrentLot();
+  const [currentLot, setCurrentLot, lotLoading] = useGetCurrentLot();
   const { account } = useAccount();
   const { provider, isReady } = useProvider();
   const { data: signer, error, isLoading } = useSigner();
@@ -73,6 +73,20 @@ const Home = () => {
     "Slee A, B",
     "Fronzack"
   ]
+
+  const handleAddToMetaMask = async () => {
+    const wasAdded = await ethereum.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: UBParkingCredits.networks[NETWORK_ID].address,
+          symbol: "UBPC",
+          decimals: 18,
+        },
+      },
+    });
+  }
 
   const handleAirdropButtonClick = async () => {
     let tx = await UBParkingcreditsContract.claim_airdrop()
@@ -136,7 +150,7 @@ const Home = () => {
     // }
 
     let items = []
-    console.log(lotFees)
+    // console.log(lotFees)
     maxCapacities.forEach((capacity, index) => {
       if (index < LOT_LIST.length) {
         items.push(
@@ -144,7 +158,7 @@ const Home = () => {
             <th>{LOT_LIST[index]}</th>
             <th>{currentCapacities[index]}</th>
             <th>{capacity}</th>
-            <th>{lotFees[index] ? ethers.utils.formatEther(lotFees[index]): 0.0} UBPC</th>
+            <th>{lotFees[index] ? ethers.utils.formatEther(lotFees[index]) : 0.0} UBPC</th>
             <th><Button variant="outline-success" size="sm" onClick={() => handleParkButtonClick(index)}>Park at {LOT_LIST[index]}</Button></th>
           </tr>
         )
@@ -154,33 +168,34 @@ const Home = () => {
     // console.log(items)
     return (
       <div>
-      <Table striped bordered hover size="sm">
-        <thead>
-          <tr>
-            <th>Parking Lot</th>
-            <th>Current Capacity</th>
-            <th>Max Capacity</th>
-            <th>Current Fee</th>
-            <th>Park Here</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.slice(1)}
-        </tbody>
-      </Table>
+        <Table striped bordered hover size="sm">
+          <thead>
+            <tr>
+              <th>Parking Lot</th>
+              <th>Current Capacity</th>
+              <th>Max Capacity</th>
+              <th>Current Fee</th>
+              <th>Park Here</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.slice(1)}
+          </tbody>
+        </Table>
 
-      <Container id="leave">
-      <h1>Leave</h1>
-      <Button variant="danger" onClick={() => handleLeaveButtonClick()}>Leave {LOT_LIST[currentLot]}</Button>
-    </Container>
+        <Container id="leave">
+          <h1>Leave</h1>
+          <Button variant="danger" onClick={() => handleLeaveButtonClick()}>Leave {LOT_LIST[currentLot]}</Button>
+        </Container>
 
-    <Container id="claim">
-      <h1>Claim</h1>
-     <Button variant="success" onClick={() => handleClaimButtonClick()}>Claim</Button> &nbsp;&nbsp;&nbsp;
-     <Button variant="success" onClick={() => handleAirdropButtonClick()}> One time UBPC airdrop</Button>
-    </Container>
-    <p></p>
-    </div>
+        <Container id="claim">
+          <h1>Claim</h1>
+          <Button variant="success" onClick={() => handleClaimButtonClick()}>Claim</Button>
+          <Button variant="success" onClick={() => handleAirdropButtonClick()}> One time UBPC airdrop</Button>
+          <Button variant="warning" onClick={() => handleAddToMetaMask()}> Add UBPC to MetaMask</Button>
+        </Container>
+        <p></p>
+      </div>
     )
   }
 
