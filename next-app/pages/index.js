@@ -190,8 +190,8 @@ const Home = () => {
 
         <Container id="claim">
           <h1>Claim</h1>
-          <Button variant="success" onClick={() => handleClaimButtonClick()}>Claim</Button>
-          <Button variant="success" onClick={() => handleAirdropButtonClick()}> One time UBPC airdrop</Button>
+          <Button variant="success" onClick={() => handleClaimButtonClick()}>Claim</Button> &nbsp;&nbsp;&nbsp;
+          <Button variant="success" onClick={() => handleAirdropButtonClick()}> One time UBPC airdrop</Button> &nbsp;&nbsp;&nbsp;
           <Button variant="warning" onClick={() => handleAddToMetaMask()}> Add UBPC to MetaMask</Button>
         </Container>
         <p></p>
