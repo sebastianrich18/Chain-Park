@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract UBParkingCredits is ERC20 {
   uint public constant AIRDROP_AMOUNT = 100 ether;
   address admin;
-  address CHAIN_PARK;
+  address public CHAIN_PARK;
   mapping(address=>bool) claimed_airdrop;
 
   modifier onlyAdmin() {

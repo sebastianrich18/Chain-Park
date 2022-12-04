@@ -1,5 +1,4 @@
 const ChainPark = artifacts.require("ChainPark");
-
 const UBPC = artifacts.require("UBParkingCredits");
 
 

@@ -14,7 +14,7 @@ abstract contract IUBPC is IERC20 {
 
 contract ChainPark  {
   address admin;
-  address UBPC_CONTRACT;
+  address public UBPC_CONTRACT;
   uint256 public maxFee; // the cost to park if you are the last person to park
   uint dailyIncome; // the amount you will earn if you do not park for a day
   //uint constant NOT_PARKED = 2**256 - 1; // use max uint to represent not parked
