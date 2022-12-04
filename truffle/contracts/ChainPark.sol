@@ -13,20 +13,27 @@ abstract contract IUBPC is IERC20 {
 
 
 contract ChainPark  {
+
+  // In reality this would be set to 1 day, but for testing purposes we set it to 1 minute
+  uint public constant CLAIM_WAIT_PERIOD = 1 minutes; // 1 day
+  // We dont want to wait days to be able to test claim, so we set it to 1 minute
+
   address admin;
-  address public UBPC_CONTRACT;
-  uint256 public maxFee; // the cost to park if you are the last person to park
-  uint dailyIncome; // the amount you will earn if you do not park for a day
-  uint staffLot; // lotIndex for lot that is reserved for staff
-  //uint constant NOT_PARKED = 2**256 - 1; // use max uint to represent not parked
+  address public UBPC_CONTRACT; // address of the UBParkingCredits contract
+
+  uint public maxFee; // the cost to park if you are the last person to park
+  uint public dailyIncome; // the amount you will earn if you do not park for a day
+  
+  uint staffLot; // lotIndex of lot that is reserved for staff
   mapping(address=>bool) staff;
+
   mapping(address=>uint) lastClaimed; // timestamp
   mapping(address=>uint) parksSinceClaim;
-  mapping(address=>uint) public currentlyParked; // NOT_PARKED if not parked, otherwise lotIndex
+
+  mapping(address=>uint) public currentlyParked; // 0 if not parked, otherwise lotIndex
+
   uint[] public lotMaxCapacities; // index 0 is not used. Lots are 1-indexed so that 0 can be used to represent not parked
   uint[] public lotCurrentCapacities;
-  // enum lotType {Staff, Student, Both}
-  // lotType[] lotTypes;
 
 
   event Parked(address indexed user, uint lotIndex);
@@ -37,11 +44,6 @@ contract ChainPark  {
     require(msg.sender == admin, "Only admin can call this function.");
     _;
   }
-
-  // modifier onlyStaff() {
-  //   require(staff[msg.sender], "Only staff can call this function.");
-  //   _;
-  // }
 
   modifier notFull(uint lotIndex) {
     require(lotCurrentCapacities[lotIndex] < lotMaxCapacities[lotIndex], "Lot is full.");
@@ -61,7 +63,7 @@ contract ChainPark  {
 
   function getFee(uint lotIndex) public view returns (uint) {
     if (lotCurrentCapacities[lotIndex] == 0) {
-      return 0;
+      return 0; // free to park if no one is parked
     }
     return maxFee * (lotCurrentCapacities[lotIndex] + 1) / lotMaxCapacities[lotIndex];
   }
@@ -82,13 +84,6 @@ contract ChainPark  {
     emit Parked(msg.sender, lotIndex);
   }
 
-  function checkUBPCBalance(address user) public view returns (uint) {
-    return IUBPC(UBPC_CONTRACT).balanceOf(user);
-  }
-
-  function mint(address account, uint256 amount) internal {
-    IUBPC(UBPC_CONTRACT).mint(account, amount);
-  }
 
   function leave() public {
     require(currentlyParked[msg.sender] != 0, "You are not parked.");
@@ -99,13 +94,21 @@ contract ChainPark  {
   }
 
   function claim() public {
-    uint daysSinceClaim = (block.timestamp - lastClaimed[msg.sender]) / 1 days;
+    uint daysSinceClaim = (block.timestamp - lastClaimed[msg.sender]) / CLAIM_WAIT_PERIOD;
     require(daysSinceClaim > parksSinceClaim[msg.sender], "You have not parked for a day.");
     uint amount = (daysSinceClaim - parksSinceClaim[msg.sender]) * dailyIncome; // you will not get paid for the days you parked
     lastClaimed[msg.sender] = block.timestamp;
     parksSinceClaim[msg.sender] = 0;
-    mint(msg.sender, amount);
+    mintUBPC(msg.sender, amount); // call mint function of UBPC contract
     emit Claimed(msg.sender, amount);
+  }
+
+  function checkUBPCBalance(address user) public view returns (uint) {
+    return IUBPC(UBPC_CONTRACT).balanceOf(user);
+  }
+
+  function mintUBPC(address account, uint256 amount) internal {
+    IUBPC(UBPC_CONTRACT).mint(account, amount);
   }
 
   function withdraw() public onlyAdmin {
@@ -136,7 +139,7 @@ contract ChainPark  {
     staff[_staffAddr] = true;
   }
 
-  function setAdmin(address newAdmin) public onlyAdmin {
-    admin = newAdmin;
+  function setAdmin(address _newAdmin) public onlyAdmin {
+    admin = _newAdmin;
   }
 }
