@@ -39,7 +39,7 @@ module.exports = async function (deployer) {
 
   // let lotTypes = [2, 1, 2, 2, 0, 2, 2, 2, 0, 0, 2, 1, 0, 2, 0, 2, 2, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2]
   let maxFee = ethers.utils.parseEther("10");
-  let dailyIncome = 20
+  let dailyIncome = ethers.utils.parseEther("20");
   
   let initalSupply = 0
 
