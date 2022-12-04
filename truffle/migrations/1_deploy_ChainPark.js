@@ -34,21 +34,22 @@ var UBPC = artifacts.require("UBParkingCredits");
 
 
 module.exports = async function (deployer) {
-  let lotMaxCap = [9999, 8, 5, 211, 432, 54, 28, 543, 234, 62, 54, 123, 431, 213, 321, 321, 123, 123, 321, 1234, 124, 1233, 213, 123, 321, 234, 321]; // we can get a accurate number from the parking office or counting
+  // console.log(ethers.utils)
+  let lotMaxCap = [9999, 8, 10, 211, 432, 54, 28, 543, 234, 62, 54, 123, 431, 213, 321, 321, 123, 123, 321, 1234, 124, 1233, 213, 123, 321, 234, 321]; // we can get a accurate number from the parking office or counting
   // for lot types, 0=Staff, 1=Student, 2=Both
 
   // let lotTypes = [2, 1, 2, 2, 0, 2, 2, 2, 0, 0, 2, 1, 0, 2, 0, 2, 2, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2]
+  let staffLot = 2;
   let maxFee = ethers.utils.parseEther("10");
   let dailyIncome = ethers.utils.parseEther("20");
-  
-  let initalSupply = 0
+  let initalSupply = ethers.utils.bigNumberify(0)
 
   await deployer.deploy(UBPC, initalSupply, { overwrite: true }) // deploy the UBPC token
   let ubpc = await UBPC.deployed();
-  
-  await deployer.deploy(ChainPark, lotMaxCap, ubpc.address, maxFee, dailyIncome, { overwrite: true })  // after UBPC is deployed, deploy ChainPark with ubpc's address
+
+  await deployer.deploy(ChainPark, lotMaxCap, ubpc.address, maxFee, dailyIncome, staffLot, { overwrite: true })  // after UBPC is deployed, deploy ChainPark with ubpc's address
   let chain_park = await ChainPark.deployed();
-  
+
   await ubpc.setChainPark(chain_park.address); // once ChainPark is deployed, set ChainPark address in UBPC
 
 };
