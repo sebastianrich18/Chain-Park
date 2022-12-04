@@ -38,10 +38,10 @@ module.exports = async function (deployer) {
   // for lot types, 0=Staff, 1=Student, 2=Both
 
   // let lotTypes = [2, 1, 2, 2, 0, 2, 2, 2, 0, 0, 2, 1, 0, 2, 0, 2, 2, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2]
-  let maxFee = ethers.utils.parseEther("0.1");
-  let dailyIncome = 5
+  let maxFee = ethers.utils.parseEther("10");
+  let dailyIncome = 20
   
-  let initalSupply = 1_000_000
+  let initalSupply = 0
 
   await deployer.deploy(UBPC, initalSupply, { overwrite: true }) // deploy the UBPC token
   let ubpc = await UBPC.deployed();
