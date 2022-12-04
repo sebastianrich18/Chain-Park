@@ -66,6 +66,11 @@ const Home = () => {
     "Fronzack"
   ]
 
+  const handleClaimButtonClick = async () => {
+    let tx = await chainParkContract.claim()
+    let res = await tx.wait()
+  }
+
   const handleParkButtonClick = async (index) => {
     let tx = await chainParkContract.park(index)
     let res = await tx.wait()
@@ -158,7 +163,8 @@ const Home = () => {
 
     <Container id="claim">
       <h1>Claim</h1>
-      <p>Coming Soon!</p>
+      <p>claim tokens for consecutive days not parked</p>
+     <Button variant="success" onClick={() => handleClaimButtonClick()}>Claim</Button> 
     </Container>
     </div>
     )
