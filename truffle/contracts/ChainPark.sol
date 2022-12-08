@@ -8,6 +8,8 @@ abstract contract IUBPC is IERC20 {
   function mint(address account, uint256 amount) public virtual;
   function claim_airdrop() public virtual;
   function setChainPark(address _chainParkAddr) public virtual;
+  function burn(uint amount) public virtual;
+  function burnFrom(address account, uint amount) public virtual;
 }
 
 contract ChainPark  {
@@ -75,7 +77,7 @@ contract ChainPark  {
       require(staff[msg.sender], "Only staff can park in the staff lot.");
     }
 
-    IUBPC(UBPC_CONTRACT).transferFrom(msg.sender, address(this), getFee(lotIndex));
+    IUBPC(UBPC_CONTRACT).burnFrom(msg.sender, getFee(lotIndex));
 
     parksSinceClaim[msg.sender]++;
     lotCurrentCapacities[lotIndex]++;

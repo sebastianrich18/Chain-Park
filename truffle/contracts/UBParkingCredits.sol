@@ -2,8 +2,9 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
-contract UBParkingCredits is ERC20 {
+contract UBParkingCredits is ERC20, ERC20Burnable {
   uint public constant AIRDROP_AMOUNT = 100 ether;
   address admin;
   address public CHAIN_PARK;
