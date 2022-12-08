@@ -47,7 +47,7 @@ const Home = () => {
   const LOT_LIST = [
     "NONE",
     "Arena",
-    "Alumni A, B, C",
+    "Staff Only",
     "Baird A",
     "Baird B",
     "Cooke A, B",
