@@ -1,0 +1,22 @@
+TO DEPLOY WITH TRUFFLE:
+    Put 1_deploy_ChainPark.sol in the migrations folder of a truffle project
+    Configure truffle-config.js to use the correct network (if not done already)
+    Run truffle migrate
+    DONE!
+    1_deploy_ChainPark.js is a script that will first deploy UBParkingCredits.sol (ERC20 Contract)
+    and then deploy ChainPark.sol (Parking Contract) with the address of UBParkingCredits as a parameter.
+    After both contracts are deployed, we call setChainPark() on UBParkingCredits.sol to set the address of ChainPark.sol.
+    Now our two contracts are deployed and linked together!
+
+
+TO DEPLOY WITH REMIX:
+    Load and compile both contracts into remix IDE
+    First deploy UBParkingCredits.sol
+    Then deploy ChainPark.sol with the following parameters:
+        _lotMaxCapacities = [9999, 8, 10, 211, 432, 54, 28, 543, 234, 62, 54, 123, 431, 213, 321, 321, 123, 123, 321, 1234, 124, 1233, 213, 123, 321, 234, 321]
+        _ubpcContractAddr = <address of UBParkingCredits.sol>
+        _maxFee = 1000000000000000000
+        _dailyIncome = 2000000000000000000
+        _staffLot = 2
+
+    After ChainPark.sol is deployed, call setChainPark() on UBParkingCredits.sol to set the address of ChainPark.sol.

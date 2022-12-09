@@ -79,7 +79,6 @@ contract ChainPark  {
 
     IUBPC(UBPC_CONTRACT).burnFrom(msg.sender, getFee(lotIndex));
 
-    parksSinceClaim[msg.sender]++;
     lotCurrentCapacities[lotIndex]++;
     currentlyParked[msg.sender] = lotIndex;
     emit Parked(msg.sender, lotIndex);
@@ -88,13 +87,18 @@ contract ChainPark  {
 
   function leave() public {
     require(currentlyParked[msg.sender] != 0, "You are not parked.");
-    uint lotIndex = uint(currentlyParked[msg.sender]);
+    if (lastClaimed[msg.sender] == 0) {
+      lastClaimed[msg.sender] = block.timestamp;
+    }
+    uint lotIndex = currentlyParked[msg.sender];
+    parksSinceClaim[msg.sender]++;
     lotCurrentCapacities[lotIndex]--;
     currentlyParked[msg.sender] = 0;
     emit Left(msg.sender, lotIndex);
   }
 
   function claim() public {
+    require(lastClaimed[msg.sender] != 0, "You must have parked and left at least once before claiming");
     uint amount = getClaimAmmount(msg.sender);
     require(amount > 0, "You have nothing to claim.");
     lastClaimed[msg.sender] = block.timestamp;

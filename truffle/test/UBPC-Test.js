@@ -12,14 +12,14 @@ const BLOCKS_PER_DAY = 7167; // will be used to simulate time passing
  * See docs: https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript
  */
 contract("UBParkingCredits", async function (accounts) {
-  before(async () => {
-    let ubpcInstance = await UBPC.deployed();
-    let cpInstance = await ChainPark.deployed();
-    console.log("ChainPark address: " + cpInstance.address);
-    console.log("Chain address in UBPC: " + await ubpcInstance.CHAIN_PARK());
-    console.log("UBPC address: " + ubpcInstance.address);
-    console.log("UBPC address in ChainPark: " + await cpInstance.UBPC_CONTRACT());
-  });
+  // before(async () => {
+  //   let ubpcInstance = await UBPC.deployed();
+  //   let cpInstance = await ChainPark.deployed();
+  //   console.log("ChainPark address: " + cpInstance.address);
+  //   console.log("Chain address in UBPC: " + await ubpcInstance.CHAIN_PARK());
+  //   console.log("UBPC address: " + ubpcInstance.address);
+  //   console.log("UBPC address in ChainPark: " + await cpInstance.UBPC_CONTRACT());
+  // });
 
   it("shouldn't let non ChainPark addr mint", async () => {
     let ubpcInstance = await UBPC.deployed();
